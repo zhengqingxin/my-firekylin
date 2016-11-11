@@ -1,10 +1,11 @@
-(function(win, doc){
-  var getById = function(el){
+'use strict';
+(function (win, doc) {
+  var getById = function (el) {
     return document.getElementById(el);
   };
 
   //from qwrap
-  var getDocRect = function(doc) {
+  var getDocRect = function (doc) {
     doc = doc || document;
     var win = doc.defaultView || doc.parentWindow,
       mode = doc.compatMode,
@@ -38,7 +39,7 @@
     };
   };
 
-  var getXY = function(node) {
+  var getXY = function (node) {
     var doc = node.ownerDocument,
       docRect = getDocRect(doc),
       scrollLeft = docRect.scrollX,
@@ -55,7 +56,7 @@
     return xy;
   };
 
-  var getRect = function(el){
+  var getRect = function (el) {
     var p = getXY(el);
     var x = p[0];
     var y = p[1];
@@ -75,27 +76,27 @@
    * load comment
    * @return {[type]} [description]
    */
-  var loadComment = function(){
+  var loadComment = function () {
     var comments = getById('comments');
-    if(!comments){
+    if (!comments) {
       return;
     }
-    var load = function(){
+    var load = function () {
       var dataType = comments.getAttribute('data-type');
-      if(dataType === 'disqus'){
+      if (dataType === 'disqus') {
         loadDisqusComment();
-      }else if(dataType === 'duoshuo'){
+      } else if (dataType === 'duoshuo') {
         loadDuoshuoComment();
       }
     }
-    if(location.hash.indexOf('#comments') > -1){
+    if (location.hash.indexOf('#comments') > -1) {
       load();
-    }else {
-      var timer = setInterval(function(){
+    } else {
+      var timer = setInterval(function () {
         var docRect = getDocRect();
         var currentTop = docRect.scrollY + docRect.height;
         var elTop = getRect(comments).top;
-        if(Math.abs(elTop - currentTop) < 1000){
+        if (Math.abs(elTop - currentTop) < 1000) {
           load();
           clearInterval(timer);
         }
@@ -106,12 +107,12 @@
    * load disqus comment
    * @return {[type]} [description]
    */
-  var loadDisqusComment = function(){
+  var loadDisqusComment = function () {
     var disqus_thread = getById('disqus_thread');
-    if(!disqus_thread){
+    if (!disqus_thread) {
       return;
     }
-    window.disqus_config = function(){
+    window.disqus_config = function () {
       this.page.url = disqus_thread.getAttribute('data-url');
       this.page.identifier = disqus_thread.getAttribute('data-identifier');
     }
@@ -121,9 +122,9 @@
     (doc.head || doc.body).appendChild(s);
   };
 
-  var loadDuoshuoComment = function(){
+  var loadDuoshuoComment = function () {
     var disqus_thread = getById('ds_thread');
-    if(!disqus_thread){
+    if (!disqus_thread) {
       return;
     }
     window.duoshuoQuery = {short_name: disqus_thread.getAttribute('data-name')};
@@ -132,21 +133,18 @@
     (doc.head || doc.body).appendChild(s);
   };
 
-  window.addEventListener('load', function(){
+  window.addEventListener('load', function () {
     loadComment();
   });
 
 
-
-
-
   var utils = {
-    isMob : (function(){
+    isMob: (function () {
       var ua = navigator.userAgent.toLowerCase();
       var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
       var result = false;
-      for( var i = 0 ; i < agents.length; i++ ){
-        if( ua.indexOf( agents[i].toLowerCase() ) > -1){
+      for (var i = 0; i < agents.length; i++) {
+        if (ua.indexOf(agents[i].toLowerCase()) > -1) {
           result = true;
         }
       }
@@ -155,59 +153,69 @@
   }
 
 
-  if( utils.isMob ){
+  if (utils.isMob) {
     document.documentElement.className += ' mob';
-  }else{
+  } else {
     document.documentElement.className += ' pc';
   }
 
 
   var Dom = {
-    $sidebar : document.querySelector('#sidebar'),
-    $main : document.querySelector('#main'),
-    $sidebar_mask : document.querySelector('#sidebar-mask'),
-    $body : document.body,
-    $btn_side : document.querySelector('#header .btn-bar'),
-    $article : document.querySelectorAll('.mob #page-index article')
+    $sidebar: document.querySelector('#sidebar'),
+    $main: document.querySelector('#main'),
+    $sidebar_mask: document.querySelector('#sidebar-mask'),
+    $body: document.body,
+    $btn_side: document.querySelector('#header .btn-bar'),
+    $article: document.querySelectorAll('.mob #page-index article')
   };
 
-  Dom.bindEvent = function(){
+  Dom.bindEvent = function () {
 
     var _this = this,
       body_class_name = 'side',
       eventFirst = 'click',
       eventSecond = 'click';
 
-    if( utils.isMob ){
+    if (utils.isMob) {
       eventFirst = 'touchstart';
       eventSecond = 'touchend';
     }
 
-    this.$btn_side.addEventListener( eventSecond ,function(){
+    this.$btn_side.addEventListener(eventSecond, function () {
 
-      if( _this.$body.className.indexOf( body_class_name ) > -1 ){
-        _this.$body.className = _this.$body.className.replace( body_class_name , '');
+      if (_this.$body.className.indexOf(body_class_name) > -1) {
+        _this.$body.className = _this.$body.className.replace(body_class_name, '');
         _this.$sidebar_mask.style.display = 'none';
-      }else{
+      } else {
         _this.$body.className += (' ' + body_class_name);
         _this.$sidebar_mask.style.display = 'block';
       }
 
-    },false);
+    }, false);
 
-    this.$sidebar_mask.addEventListener( eventFirst , function( e ){
-      _this.$body.className = _this.$body.className.replace( body_class_name , '');
+    this.$sidebar_mask.addEventListener(eventFirst, function (e) {
+      _this.$body.className = _this.$body.className.replace(body_class_name, '');
       _this.$sidebar_mask.style.display = 'none';
       e.preventDefault();
-    },false);
+    }, false);
 
 
-    window.addEventListener('resize',function(){
-      _this.$body.className = _this.$body.className.replace( body_class_name , '');
+    window.addEventListener('resize', function () {
+      _this.$body.className = _this.$body.className.replace(body_class_name, '');
       _this.$sidebar_mask.style.display = 'none';
-    },false);
-  }
+    }, false);
+  };
 
   Dom.bindEvent();
+
+  if ('serviceWorker' in navigator) {
+    if (!navigator.serviceWorker.controller) {
+      navigator.serviceWorker.register('./sw.js').then(function (reg) {
+        console.log(reg);
+      })
+    }
+  } else {
+    console.warn('您使用的浏览器不支持 service worker,请用 chrome 最新版体验!')
+  }
 
 })(window, document);
