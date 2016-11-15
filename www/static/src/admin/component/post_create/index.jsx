@@ -1,8 +1,6 @@
 import Base from 'base';
 import React from 'react';
 import moment from 'moment';
-import ReactDom from 'react-dom';
-import {Link} from 'react-router';
 import {
   Form, 
   Radio, 
@@ -23,7 +21,6 @@ import TagAction from 'admin/action/tag';
 import TagStore from 'admin/store/tag';
 import TipAction from 'common/action/tip';
 import firekylin from 'common/util/firekylin';
-import ModalAction from 'common/action/modal';
 import PushStore from 'admin/store/push';
 import PushAction from 'admin/action/push';
 import OptionsAction from 'admin/action/options';
@@ -202,7 +199,7 @@ export default class extends Base {
     let props = {
       value: postInfo.title,
       label: `${this.id ? '编辑' : '撰写'}${this.type ? '页面' : '文章'}`,
-      onChange(e) {
+      onChange:(e)=>{
         postInfo.title = e.target.value;
         this.setState({postInfo});
       }
@@ -226,7 +223,7 @@ export default class extends Base {
     let props = {
       disabled: postInfo.status === 3,
       value: postInfo.pathname,
-      onChange(e) {
+      onChange:(e)=>{
         postInfo.pathname = e.target.value;
         this.setState({postInfo});
       }
@@ -271,7 +268,7 @@ export default class extends Base {
     if( this.state.push_sites.length === 0 ) { return null; }
 
     let push_sites = postInfo.options.push_sites || [];
-    let list = push_sites.map((site, i) => {
+    let list = this.state.push_sites.map((site, i) => {
       let checked = push_sites.includes(site.appKey);
       let props = {
         checked,
